@@ -47,6 +47,16 @@ public class ConstantNode extends Node{
 		}
 	}
 
+	public boolean isOne(){
+		if(isInt){
+			if(intValue == 1) return true;
+			else return false;
+		}else{
+			if(doubleValue == 1.0) return true;
+			else return false;
+		}
+	}
+
 	public int getIntValue(){
 		return intValue;
 	}

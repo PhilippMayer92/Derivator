@@ -2,12 +2,36 @@ package derivator.tree.binary;
 
 import derivator.tree.Node;
 import derivator.tree.unary.MinusNode;
+import derivator.tree.leaf.ConstantNode;
 
 public class MultiplicationNode extends Node{
 
 	@Override
 	public String toString(){
 		return "(" + leftChild.toString() + "*" + rightChild.toString() + ")";
+	}
+
+	@Override
+	public Node optimizeLevel0(){
+		Node newTop = this;
+		ConstantNode cn;
+
+		this.setLeftChild(leftChild.optimizeLevel0());
+		this.setRightChild(rightChild.optimizeLevel0());
+
+		if(leftChild instanceof ConstantNode){
+			cn = (ConstantNode) leftChild;
+			if(cn.isZero()) newTop = new ConstantNode("0");
+			if(cn.isOne()) newTop = rightChild;
+		}
+
+		if(rightChild instanceof ConstantNode){
+			cn = (ConstantNode) rightChild;
+			if(cn.isZero()) newTop = new ConstantNode("0");
+			if(cn.isOne()) newTop = leftChild;
+		}
+
+		return newTop;
 	}
 
 	@Override
