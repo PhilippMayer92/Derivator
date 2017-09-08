@@ -8,6 +8,8 @@ public class MultiplicationNode extends Node{
 
 	@Override
 	public String toString(){
+		if(parent == null) return leftChild.toString() + "*" + rightChild.toString();
+		if(parent instanceof MultiplicationNode) return leftChild.toString() + "*" + rightChild.toString();
 		return "(" + leftChild.toString() + "*" + rightChild.toString() + ")";
 	}
 

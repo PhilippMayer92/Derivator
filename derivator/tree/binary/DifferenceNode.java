@@ -9,6 +9,8 @@ public class DifferenceNode extends Node{
 
 	@Override
 	public String toString(){
+		if(parent == null) return leftChild.toString() + "-" + rightChild.toString();
+		if(parent instanceof AdditionNode) return leftChild.toString() + "-" + rightChild.toString();
 		return "(" + leftChild.toString() + "-" + rightChild.toString() + ")";
 	}
 
