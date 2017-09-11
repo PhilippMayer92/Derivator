@@ -13,6 +13,22 @@ public class PolynomialNode extends Node{
 	}
 
 	@Override
+	public Node optimizeLevel0(){
+		Node newTop = this;
+
+		this.setLeftChild(leftChild.optimizeLevel0());
+		this.setRightChild(rightChild.optimizeLevel0());
+
+		if(rightChild instanceof ConstantNode){
+			ConstantNode cn = (ConstantNode) rightChild;
+			if(cn.isZero()) newTop = new ConstantNode("1");
+			if(cn.isOne()) newTop = leftChild;
+		}
+
+		return newTop;
+	}
+
+	@Override
 	public Node derivate(){
 		Node topNode, newNode, exponent, product;
 		product = new MultiplicationNode();
