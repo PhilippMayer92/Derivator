@@ -14,6 +14,28 @@ public class DivisionNode extends Node{
 	}
 
 	@Override
+	public Node optimizeLevel0(){
+		Node newTop = this;
+		ConstantNode cn;
+
+		this.setLeftChild(leftChild.optimizeLevel0());
+		this.setRightChild(rightChild.optimizeLevel0());
+
+		if(leftChild instanceof ConstantNode){
+			cn = (ConstantNode) leftChild;
+			if(cn.isZero()) newTop = new ConstantNode("0");
+		}
+
+		if(rightChild instanceof ConstantNode){
+			cn = (ConstantNode) rightChild;
+			if(cn.isZero()) throw new ArithmeticException("Division by zero");
+			if(cn.isOne()) newTop = leftChild;
+		}
+
+		return newTop;
+	}
+
+	@Override
 	public Node optimizeLevel1(){
 		Node newTop = this, secondaryNode = null;
 

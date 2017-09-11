@@ -100,6 +100,16 @@ public abstract class Node{
 		return this;
 	}
 
+	public Node optimizeLevel3(){
+		if(leftChild != null){
+			this.setLeftChild(leftChild.optimizeLevel3());
+		}
+		if(rightChild != null){
+			this.setRightChild(rightChild.optimizeLevel3());
+		}
+		return this;
+	}
+
 	public abstract Node derivate();
 
 	public void free(){

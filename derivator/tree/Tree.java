@@ -43,6 +43,11 @@ public class Tree{
 		root = root.optimizeLevel2();
 	}
 
+	//(kommutatives) Constant Folding fuer Variablen
+	public void optimizeLevel3(){
+		root = root.optimizeLevel3();
+	}
+
 	public Tree derivate(){
 		Node newRoot = root.derivate();
 		return new Tree(newRoot, varName);
