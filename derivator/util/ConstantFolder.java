@@ -7,10 +7,13 @@ import derivator.tree.binary.*;
 
 public class ConstantFolder{
 	private ConstantNode leftConst, rightConst;
+	private VariableNode leftVar, rightVar;
 
 	public ConstantFolder(){
 		leftConst = null;
 		rightConst = null;
+		leftVar = null;
+		rightVar = null;
 	}
 
 	public Node constantFoldingAdd(ConstantNode left, ConstantNode right){
@@ -61,7 +64,7 @@ public class ConstantFolder{
 		return minus;
 	}
 
-	public Node findConstant(Node root, boolean plus){
+	public Node findConstantAdd(Node root, boolean plus){
 		Node rightC, leftC, top = null;
 
 		if(!(root instanceof AdditionNode || root instanceof DifferenceNode || root instanceof ConstantNode)) return null;
@@ -106,22 +109,80 @@ public class ConstantFolder{
 
 		if(root instanceof AdditionNode){
 			if(leftC instanceof AdditionNode || leftC instanceof DifferenceNode){
-				top = findConstant(leftC, plus);
+				top = findConstantAdd(leftC, plus);
 				if(top != null) return top;
 			}
 
 			if(rightC instanceof AdditionNode || rightC instanceof DifferenceNode){
-				top = findConstant(rightC, plus);
+				top = findConstantAdd(rightC, plus);
 				if(top != null) return top;
 			}
 		}else{
 			if(leftC instanceof AdditionNode || leftC instanceof DifferenceNode){
-				top = findConstant(leftC, plus);
+				top = findConstantAdd(leftC, plus);
 				if(top != null) return top;
 			}
 
 			if(rightC instanceof AdditionNode || rightC instanceof DifferenceNode){
-				top = findConstant(rightC, !plus);
+				top = findConstantAdd(rightC, !plus);
+				if(top != null) return top;
+			}
+		}
+		
+		return null;
+	}
+
+	public Node findVarAdd(Node root, boolean plus){
+		Node top, leftC, rightC;
+
+		if(!(root instanceof AdditionNode || root instanceof DifferenceNode || root instanceof VariableNode)) return null;
+
+		if(root instanceof VariableNode){
+			if(leftVar == null) leftVar = (VariableNode) root;
+			else rightVar = (VariableNode) root;
+			if(plus) return new PlusNode();
+			else return new MinusNode();
+		}
+
+		leftC = root.getLeftChild();
+		rightC = root.getRightChild();
+
+		if(leftC instanceof VariableNode){
+			if(leftVar == null) leftVar = (VariableNode) leftC;
+			else rightVar = (VariableNode) leftC;
+
+			if(plus) return new PlusNode();
+			else return new MinusNode();
+		}
+
+		if(rightC instanceof VariableNode){
+			if(leftVar == null) leftVar = (VariableNode) leftC;
+			else rightVar = (VariableNode) leftC;
+
+			if(root instanceof DifferenceNode) plus = !plus;
+
+			if(plus) return new PlusNode();
+			else return new MinusNode();
+		}
+
+		if(root instanceof AdditionNode){
+			if(leftC instanceof AdditionNode || leftC instanceof DifferenceNode){
+				top = findConstantAdd(leftC, plus);
+				if(top != null) return top;
+			}
+
+			if(rightC instanceof AdditionNode || rightC instanceof DifferenceNode){
+				top = findConstantAdd(rightC, plus);
+				if(top != null) return top;
+			}
+		}else{
+			if(leftC instanceof AdditionNode || leftC instanceof DifferenceNode){
+				top = findConstantAdd(leftC, plus);
+				if(top != null) return top;
+			}
+
+			if(rightC instanceof AdditionNode || rightC instanceof DifferenceNode){
+				top = findConstantAdd(rightC, !plus);
 				if(top != null) return top;
 			}
 		}

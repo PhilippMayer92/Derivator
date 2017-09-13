@@ -29,4 +29,9 @@ public class VariableNode extends Node{
 	public Node derivate(){
 		return new ConstantNode("1");
 	}
+
+	public void setZero(){
+		if(parent.getLeftChild() == this) parent.setLeftChild(new ConstantNode("0"));
+		else parent.setRightChild(new ConstantNode("0"));
+	}
 }
