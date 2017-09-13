@@ -7,7 +7,7 @@ import derivator.tree.binary.*;
 
 public class ConstantFolder{
 	private ConstantNode leftConst, rightConst;
-	private VariableNode leftVar, rightVar;
+	private Node leftVar, rightVar;
 
 	public ConstantFolder(){
 		leftConst = null;
@@ -135,34 +135,63 @@ public class ConstantFolder{
 	public Node findVarAdd(Node root, boolean plus){
 		Node top, leftC, rightC;
 
-		if(!(root instanceof AdditionNode || root instanceof DifferenceNode || root instanceof VariableNode)) return null;
+		if(!(root instanceof AdditionNode || root instanceof DifferenceNode || root instanceof VariableNode || root instanceof MultiplicationNode)) return null;
 
 		if(root instanceof VariableNode){
-			if(leftVar == null) leftVar = (VariableNode) root;
-			else rightVar = (VariableNode) root;
-			if(plus) return new PlusNode();
-			else return new MinusNode();
+			if(leftVar == null) leftVar = root;
+			else rightVar = root;
+			if(plus) top = new PlusNode();
+			else top = new MinusNode();
+			top.setLeftChild(new ConstantNode("1"));
+			return top;
 		}
 
 		leftC = root.getLeftChild();
 		rightC = root.getRightChild();
 
-		if(leftC instanceof VariableNode){
-			if(leftVar == null) leftVar = (VariableNode) leftC;
-			else rightVar = (VariableNode) leftC;
+		if(root instanceof MultiplicationNode){
+			if(leftC instanceof VariableNode){
+				if(rightC instanceof ConstantNode){
+					if(leftVar == null) leftVar = root;
+					else rightVar = root;
+					if(plus) top = new PlusNode();
+					else top = new MinusNode();
+					top.setLeftChild(rightC);
+					return top;
+				}
+			}
+			if(rightC instanceof VariableNode){
+				if(leftC instanceof ConstantNode){
+					if(leftVar == null) leftVar = root;
+					else rightVar = root;
+					if(plus) top = new PlusNode();
+					else top = new MinusNode();
+					top.setLeftChild(leftC);
+					return top;
+				}
+			}
+		}
 
-			if(plus) return new PlusNode();
-			else return new MinusNode();
+		if(leftC instanceof VariableNode){
+			if(leftVar == null) leftVar = leftC;
+			else rightVar = leftC;
+
+			if(plus) top = new PlusNode();
+			else top = new MinusNode();
+			top.setLeftChild(new ConstantNode("1"));
+			return top;
 		}
 
 		if(rightC instanceof VariableNode){
-			if(leftVar == null) leftVar = (VariableNode) leftC;
-			else rightVar = (VariableNode) leftC;
+			if(leftVar == null) leftVar = leftC;
+			else rightVar = leftC;
 
 			if(root instanceof DifferenceNode) plus = !plus;
 
-			if(plus) return new PlusNode();
-			else return new MinusNode();
+			if(plus) top = new PlusNode();
+			else top = new MinusNode();
+			top.setLeftChild(new ConstantNode("1"));
+			return top;
 		}
 
 		if(root instanceof AdditionNode){
