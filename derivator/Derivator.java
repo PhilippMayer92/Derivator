@@ -50,6 +50,9 @@ public class Derivator{
 		if(level > 1)
 			unoptimized.optimizeLevel2();
 		System.out.println("Nach Level 2: " + unoptimized.toString());
+		if(level > 2)
+			unoptimized.optimizeLevel3();
+		System.out.println("Nach Level 3: " + unoptimized.toString());
 		unoptimized.optimizeLevel0();
 		System.out.println("Nach Level 0: " + unoptimized.toString());
 		System.out.println();

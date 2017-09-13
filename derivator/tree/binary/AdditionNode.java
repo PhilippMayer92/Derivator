@@ -82,8 +82,8 @@ public class AdditionNode extends Node{
 			ConstantNode right = null;
 			MinusNode minus;
 			Node parent;
-			Node leftWithSign = cf.findConstant(leftChild, true);
-			Node rightWithSign = cf.findConstant(rightChild, true);
+			Node leftWithSign = cf.findConstantAdd(leftChild, true);
+			Node rightWithSign = cf.findConstantAdd(rightChild, true);
 
 			if(rightWithSign != null && leftWithSign != null){
 				left = (ConstantNode) leftWithSign.getLeftChild();
@@ -112,6 +112,24 @@ public class AdditionNode extends Node{
 			}
 		}
 
+		return newTop;
+	}
+
+	@Override
+	public Node optimizeLevel3(){
+		Node newTop = this;
+		ConstantFolder cf = new ConstantFolder();
+
+		this.setLeftChild(leftChild.optimizeLevel3());
+		this.setRightChild(rightChild.optimizeLevel3());
+
+		if(leftChild instanceof VariableNode && rightChild instanceof VariableNode){
+			newTop = new MultiplicationNode();
+			newTop.setLeftChild(new ConstantNode("2"));
+			newTop.setRightChild(new VariableNode(tree.getVarName()));
+		}else{
+
+		}
 		return newTop;
 	}
 

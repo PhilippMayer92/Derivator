@@ -151,24 +151,20 @@ public class ConstantFolder{
 
 		if(root instanceof MultiplicationNode){
 			if(leftC instanceof VariableNode){
-				if(rightC instanceof ConstantNode){
-					if(leftVar == null) leftVar = root;
-					else rightVar = root;
-					if(plus) top = new PlusNode();
-					else top = new MinusNode();
-					top.setLeftChild(rightC);
-					return top;
-				}
+				if(leftVar == null) leftVar = root;
+				else rightVar = root;
+				if(plus) top = new PlusNode();
+				else top = new MinusNode();
+				top.setLeftChild(rightC);
+				return top;
 			}
 			if(rightC instanceof VariableNode){
-				if(leftC instanceof ConstantNode){
-					if(leftVar == null) leftVar = root;
-					else rightVar = root;
-					if(plus) top = new PlusNode();
-					else top = new MinusNode();
-					top.setLeftChild(leftC);
-					return top;
-				}
+				if(leftVar == null) leftVar = root;
+				else rightVar = root;
+				if(plus) top = new PlusNode();
+				else top = new MinusNode();
+				top.setLeftChild(leftC);
+				return top;
 			}
 		}
 
