@@ -1,5 +1,7 @@
 package derivator.tree;
 
+import derivator.tree.leaf.ConstantNode;
+
 public abstract class Node{
 	protected Node parent;
 	protected Node leftChild;

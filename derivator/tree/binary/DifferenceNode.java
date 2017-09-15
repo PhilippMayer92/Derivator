@@ -85,14 +85,12 @@ public class DifferenceNode extends Node{
 			ConstantNode right = null;
 			MinusNode minus;
 			Node parent;
-			Node leftWithSign = cf.findConstant(leftChild, true);
-			Node rightWithSign = cf.findConstant(rightChild, false);
+			Node leftWithSign = cf.findConstantAdd(leftChild, true);
+			Node rightWithSign = cf.findConstantAdd(rightChild, false);
 
 			if(rightWithSign != null && leftWithSign != null){
 				left = (ConstantNode) leftWithSign.getLeftChild();
-				System.out.println("left: "+leftWithSign.toString());
 				right = (ConstantNode) rightWithSign.getLeftChild();
-				System.out.println("right: "+rightWithSign.toString());
 				
 				newTop = new AdditionNode();
 				newTop.setRightChild(this);

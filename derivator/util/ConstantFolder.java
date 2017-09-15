@@ -179,8 +179,8 @@ public class ConstantFolder{
 		}
 
 		if(rightC instanceof VariableNode){
-			if(leftVar == null) leftVar = leftC;
-			else rightVar = leftC;
+			if(leftVar == null) leftVar = rightC;
+			else rightVar = rightC;
 
 			if(root instanceof DifferenceNode) plus = !plus;
 
@@ -213,5 +213,27 @@ public class ConstantFolder{
 		}
 		
 		return null;
+	}
+
+	public void zeroVarSubtree(){
+		Node parent = null;
+
+		if(leftVar != null){
+			parent = leftVar.getParent();
+			if(parent.getLeftChild() == leftVar){
+				parent.setLeftChild(new ConstantNode("0"));
+			}else{
+				parent.setRightChild(new ConstantNode("0"));
+			}
+		}
+
+		if(rightVar != null){
+			parent = rightVar.getParent();
+			if(parent.getLeftChild() == rightVar){
+				parent.setLeftChild(new ConstantNode("0"));
+			}else{
+				parent.setRightChild(new ConstantNode("0"));
+			}
+		}
 	}
 }

@@ -81,7 +81,6 @@ public class AdditionNode extends Node{
 			ConstantNode left = null;
 			ConstantNode right = null;
 			MinusNode minus;
-			Node parent;
 			Node leftWithSign = cf.findConstantAdd(leftChild, true);
 			Node rightWithSign = cf.findConstantAdd(rightChild, true);
 
@@ -126,9 +125,45 @@ public class AdditionNode extends Node{
 		if(leftChild instanceof VariableNode && rightChild instanceof VariableNode){
 			newTop = new MultiplicationNode();
 			newTop.setLeftChild(new ConstantNode("2"));
+			if(tree == null) System.out.println("hilfe");
 			newTop.setRightChild(new VariableNode(tree.getVarName()));
 		}else{
+			ConstantNode left = null;
+			ConstantNode right = null;
+			MinusNode minus;
+			Node secondaryNode = null;
+			Node leftWithSign = cf.findVarAdd(leftChild, true);
+			Node rightWithSign = cf.findVarAdd(rightChild, true);
 
+			if(leftWithSign != null && rightWithSign != null){
+				left = (ConstantNode) leftWithSign.getLeftChild();
+				right = (ConstantNode) rightWithSign.getLeftChild();
+
+				secondaryNode = new MultiplicationNode();
+				secondaryNode.setRightChild(new VariableNode(tree.getVarName()));
+
+				newTop = new AdditionNode();
+				newTop.setRightChild(this);
+				newTop.setLeftChild(secondaryNode);
+
+				if(leftWithSign instanceof PlusNode){
+					if(rightWithSign instanceof PlusNode)
+						secondaryNode.setLeftChild(cf.constantFoldingAdd(left, right));
+					else{
+						secondaryNode.setLeftChild(cf.constantFoldingDif(left, right));
+					}
+				}else{
+					if(rightWithSign instanceof PlusNode){
+						secondaryNode.setLeftChild(cf.constantFoldingDif(right, left));
+					}else{
+						minus = new MinusNode();
+						minus.setLeftChild(cf.constantFoldingAdd(left, right));
+						secondaryNode.setLeftChild(minus);	
+					}	
+				}
+				cf.zeroVarSubtree();
+				newTop = newTop.optimizeLevel0();
+			}
 		}
 		return newTop;
 	}

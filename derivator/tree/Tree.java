@@ -31,21 +31,25 @@ public class Tree{
 	//neutrale Elemente beseitigen
 	public void optimizeLevel0(){
 		root = root.optimizeLevel0();
+		root.setTree(this);
 	}
 
 	//Vorzeichen nach oben bringen
 	public void optimizeLevel1(){
 		root = root.optimizeLevel1();
+		root.setTree(this);
 	}
 
 	//(kommutatives) Constant Folding
 	public void optimizeLevel2(){
 		root = root.optimizeLevel2();
+		root.setTree(this);
 	}
 
 	//(kommutatives) Constant Folding fuer Variablen
 	public void optimizeLevel3(){
 		root = root.optimizeLevel3();
+		root.setTree(this);
 	}
 
 	public Tree derivate(){
