@@ -13,7 +13,7 @@ public class Derivator{
 		Tree formulaTree;
 
 		if(args.length != 4){
-			throw new IllegalArgumentException("usage: <formula> <variable name> <number of derivation> <optimization level (0 - 1)>");
+			throw new IllegalArgumentException("usage: <formula> <variable name> <number of derivation> <optimization level (0 - 3)>");
 		}
 
 		formula = args[0];
@@ -26,7 +26,14 @@ public class Derivator{
 		}
 
 		numbDerivation = Integer.parseInt(args[2]);
+		if(numbDerivation < 0){
+			throw new IllegalArgumentException("cannot compute " + numbDerivation + ". derivate");
+		}
+
 		oLevel = Integer.parseInt(args[3]);
+		if(oLevel < 0 || oLevel > 3){
+			throw new IllegalArgumentException("optimization level must be between 0 and 3");
+		}
 
 		scanner = new Scanner(formula, var);
 
