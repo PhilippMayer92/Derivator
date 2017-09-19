@@ -125,7 +125,6 @@ public class AdditionNode extends Node{
 		if(leftChild instanceof VariableNode && rightChild instanceof VariableNode){
 			newTop = new MultiplicationNode();
 			newTop.setLeftChild(new ConstantNode("2"));
-			if(tree == null) System.out.println("hilfe");
 			newTop.setRightChild(new VariableNode(tree.getVarName()));
 		}else{
 			ConstantNode left = null;
@@ -134,7 +133,7 @@ public class AdditionNode extends Node{
 			Node secondaryNode = null;
 			Node leftWithSign = cf.findVarAdd(leftChild, true);
 			Node rightWithSign = cf.findVarAdd(rightChild, true);
-
+			
 			if(leftWithSign != null && rightWithSign != null){
 				left = (ConstantNode) leftWithSign.getLeftChild();
 				right = (ConstantNode) rightWithSign.getLeftChild();

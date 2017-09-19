@@ -136,7 +136,7 @@ public class ConstantFolder{
 		Node top, leftC, rightC;
 
 		if(!(root instanceof AdditionNode || root instanceof DifferenceNode || root instanceof VariableNode || root instanceof MultiplicationNode)) return null;
-
+	
 		if(root instanceof VariableNode){
 			if(leftVar == null) leftVar = root;
 			else rightVar = root;
@@ -167,7 +167,7 @@ public class ConstantFolder{
 				return top;
 			}
 		}
-
+				
 		if(leftC instanceof VariableNode){
 			if(leftVar == null) leftVar = leftC;
 			else rightVar = leftC;
@@ -177,7 +177,7 @@ public class ConstantFolder{
 			top.setLeftChild(new ConstantNode("1"));
 			return top;
 		}
-
+		
 		if(rightC instanceof VariableNode){
 			if(leftVar == null) leftVar = rightC;
 			else rightVar = rightC;
@@ -189,29 +189,29 @@ public class ConstantFolder{
 			top.setLeftChild(new ConstantNode("1"));
 			return top;
 		}
-
+		
 		if(root instanceof AdditionNode){
-			if(leftC instanceof AdditionNode || leftC instanceof DifferenceNode){
-				top = findConstantAdd(leftC, plus);
+			if(leftC instanceof AdditionNode || leftC instanceof DifferenceNode || leftC instanceof MultiplicationNode){
+				top = findVarAdd(leftC, plus);
 				if(top != null) return top;
 			}
-
-			if(rightC instanceof AdditionNode || rightC instanceof DifferenceNode){
-				top = findConstantAdd(rightC, plus);
+			
+			if(rightC instanceof AdditionNode || rightC instanceof DifferenceNode || rightC instanceof MultiplicationNode){
+				top = findVarAdd(rightC, plus);
 				if(top != null) return top;
 			}
 		}else{
-			if(leftC instanceof AdditionNode || leftC instanceof DifferenceNode){
-				top = findConstantAdd(leftC, plus);
+			if(leftC instanceof AdditionNode || leftC instanceof DifferenceNode || leftC instanceof MultiplicationNode){
+				top = findVarAdd(leftC, plus);
 				if(top != null) return top;
 			}
-
-			if(rightC instanceof AdditionNode || rightC instanceof DifferenceNode){
-				top = findConstantAdd(rightC, !plus);
+			
+			if(rightC instanceof AdditionNode || rightC instanceof DifferenceNode || rightC instanceof MultiplicationNode){
+				top = findVarAdd(rightC, !plus);
 				if(top != null) return top;
 			}
 		}
-		
+
 		return null;
 	}
 
