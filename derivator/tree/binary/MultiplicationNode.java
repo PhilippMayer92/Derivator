@@ -2,6 +2,7 @@ package derivator.tree.binary;
 
 import derivator.tree.Node;
 import derivator.tree.unary.MinusNode;
+import derivator.tree.unary.PlusNode;
 import derivator.tree.leaf.ConstantNode;
 
 public class MultiplicationNode extends Node{
@@ -9,7 +10,7 @@ public class MultiplicationNode extends Node{
 	@Override
 	public String toString(){
 		if(parent == null) return leftChild.toString() + "*" + rightChild.toString();
-		if(parent instanceof MultiplicationNode || parent instanceof AdditionNode || parent instanceof DifferenceNode)
+		if(parent instanceof MultiplicationNode || parent instanceof AdditionNode || parent instanceof DifferenceNode || parent instanceof MinusNode || parent instanceof PlusNode)
 			return leftChild.toString() + "*" + rightChild.toString();
 		return "(" + leftChild.toString() + "*" + rightChild.toString() + ")";
 	}

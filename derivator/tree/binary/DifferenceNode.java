@@ -129,17 +129,12 @@ public class DifferenceNode extends Node{
 		if(leftChild instanceof VariableNode && rightChild instanceof VariableNode){
 			newTop = new ConstantNode("0");
 		}else{
-			ConstantNode left = null;
-			ConstantNode right = null;
 			MinusNode minus;
 			Node secondaryNode = null;
 			Node leftWithSign = cf.findVarAdd(leftChild, true);
 			Node rightWithSign = cf.findVarAdd(rightChild, false);
 
 			if(leftWithSign != null && rightWithSign != null){
-				left = (ConstantNode) leftWithSign.getLeftChild();
-				right = (ConstantNode) rightWithSign.getLeftChild();
-
 				secondaryNode = new MultiplicationNode();
 				secondaryNode.setRightChild(new VariableNode(tree.getVarName()));
 
@@ -147,20 +142,54 @@ public class DifferenceNode extends Node{
 				newTop.setRightChild(this);
 				newTop.setLeftChild(secondaryNode);
 
-				if(leftWithSign instanceof PlusNode){
-					if(rightWithSign instanceof PlusNode)
-						secondaryNode.setLeftChild(cf.constantFoldingAdd(left, right));
-					else{
-						secondaryNode.setLeftChild(cf.constantFoldingDif(left, right));
+				if(leftWithSign.getLeftChild() instanceof ConstantNode && rightWithSign.getLeftChild() instanceof ConstantNode){
+					ConstantNode left = (ConstantNode) leftWithSign.getLeftChild();
+					ConstantNode right = (ConstantNode) rightWithSign.getLeftChild();
+
+					if(leftWithSign instanceof PlusNode){
+						if(rightWithSign instanceof PlusNode)
+							secondaryNode.setLeftChild(cf.constantFoldingAdd(left, right));
+						else{
+							secondaryNode.setLeftChild(cf.constantFoldingDif(left, right));
+						}
+					}else{
+						if(rightWithSign instanceof PlusNode){
+							secondaryNode.setLeftChild(cf.constantFoldingDif(right, left));
+						}else{
+							minus = new MinusNode();
+							minus.setLeftChild(cf.constantFoldingAdd(left, right));
+							secondaryNode.setLeftChild(minus);	
+						}	
 					}
 				}else{
-					if(rightWithSign instanceof PlusNode){
-						secondaryNode.setLeftChild(cf.constantFoldingDif(right, left));
+					Node left = leftWithSign.getLeftChild();
+					Node right = rightWithSign.getLeftChild();
+					Node operator;
+
+					if(leftWithSign instanceof PlusNode){
+						if(rightWithSign instanceof PlusNode){
+							operator = new AdditionNode();
+						}else{
+							operator = new DifferenceNode();
+						}
+						operator.setLeftChild(left);
+						operator.setRightChild(right);
+						secondaryNode.setLeftChild(operator);
 					}else{
-						minus = new MinusNode();
-						minus.setLeftChild(cf.constantFoldingAdd(left, right));
-						secondaryNode.setLeftChild(minus);	
-					}	
+						if(rightWithSign instanceof PlusNode){
+							operator = new DifferenceNode();
+							operator.setRightChild(left);
+							operator.setLeftChild(right);
+							secondaryNode.setLeftChild(operator);
+						}else{
+							minus = new MinusNode();
+							operator = new AdditionNode();
+							operator.setRightChild(right);
+							operator.setLeftChild(left);
+							minus.setLeftChild(operator);
+							secondaryNode.setLeftChild(minus);
+						}
+					}
 				}
 				cf.zeroVarSubtree();
 				newTop = newTop.optimizeLevel0();
