@@ -48,6 +48,12 @@ public class ConstantNode extends Node{
 		}
 	}
 
+	public void setOne(){
+		isInt = true;
+		intValue = 1;
+		doubleValue = 1.0;
+	}
+
 	public boolean isOne(){
 		if(isInt){
 			if(intValue == 1) return true;

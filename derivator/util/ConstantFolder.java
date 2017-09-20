@@ -236,4 +236,95 @@ public class ConstantFolder{
 			}
 		}
 	}
+
+	public Node findConstantMult(Node root, boolean mult){
+		Node rightC, leftC, top = null;
+
+		if(!(root instanceof MultiplicationNode || root instanceof DivisionNode || root instanceof ConstantNode))
+			return null;
+
+		if(root instanceof ConstantNode){
+			ConstantNode rt = (ConstantNode) root;
+			if(mult) top = new PlusNode();
+			else top = new MinusNode();
+			top.setLeftChild(rt.copy());
+			if(leftConst == null) leftConst = rt;
+			else rightConst = rt;
+			return top;
+		}
+
+		leftC = root.getLeftChild();
+		rightC = root.getRightChild();
+
+		if(leftC instanceof ConstantNode){
+			if(leftConst == null) leftConst = (ConstantNode) leftC;
+			else rightConst = (ConstantNode) leftC;
+
+			if(mult)
+				top = new PlusNode();
+			else
+				top = new MinusNode();
+			top.setLeftChild(leftC);
+			return top;
+		}
+
+		if(rightC instanceof ConstantNode){
+			if(leftConst == null) leftConst = (ConstantNode) rightC;
+			else rightConst = (ConstantNode) rightC;
+
+			if(root instanceof DifferenceNode) mult = !mult;
+			if(mult)
+				top = new PlusNode();
+			else
+				top = new MinusNode();
+			top.setLeftChild(rightC);
+			return top;
+		}
+
+		if(root instanceof MultiplicationNode){
+			if(leftC instanceof MultiplicationNode || leftC instanceof DivisionNode){
+				top = findConstantMult(leftC, mult);
+				if(top != null) return top;
+			}
+
+			if(rightC instanceof MultiplicationNode || rightC instanceof DivisionNode){
+				top = findConstantMult(rightC, mult);
+				if(top != null) return top;
+			}
+		}else{
+			if(leftC instanceof MultiplicationNode || leftC instanceof DivisionNode){
+				top = findConstantMult(leftC, mult);
+				if(top != null) return top;
+			}
+
+			if(rightC instanceof MultiplicationNode || rightC instanceof DivisionNode){
+				top = findConstantMult(rightC, !mult);
+				if(top != null) return top;
+			}
+		}
+		
+		return null;
+	}
+
+	public void oneVarSubtree(){
+		Node parent = null;
+
+		if(leftVar != null){
+			parent = leftVar.getParent();
+			if(parent.getLeftChild() == leftVar){
+				parent.setLeftChild(new ConstantNode("1"));
+			}else{
+				parent.setRightChild(new ConstantNode("1"));
+			}
+		}
+
+		if(rightVar != null){
+			parent = rightVar.getParent();
+			if(parent.getLeftChild() == rightVar){
+				parent.setLeftChild(new ConstantNode("1"));
+			}else{
+				parent.setRightChild(new ConstantNode("1"));
+			}
+		}
+	}
 }
