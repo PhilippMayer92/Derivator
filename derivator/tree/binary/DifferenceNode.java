@@ -165,6 +165,7 @@ public class DifferenceNode extends Node{
 				cf.zeroVarSubtree();
 				newTop = newTop.optimizeLevel0();
 				newTop = newTop.optimizeLevel1();
+				newTop = newTop.optimizeLevel2();
 			}
 		}
 		return newTop;

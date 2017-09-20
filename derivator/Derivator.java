@@ -50,7 +50,9 @@ public class Derivator{
 	}
 
 	private static void optimization(int level, Tree unoptimized){
-		System.out.println("Vor Level 1: " + unoptimized.toString());
+		System.out.println("Vor Level 0: " + unoptimized.toString());
+		unoptimized.optimizeLevel0();
+		System.out.println("Nach Level 0: " + unoptimized.toString());
 		if(level > 0){
 			unoptimized.optimizeLevel1();
 			System.out.println("Nach Level 1: " + unoptimized.toString());
@@ -65,8 +67,6 @@ public class Derivator{
 			unoptimized.optimizeLevel3();
 			System.out.println("Nach Level 3: " + unoptimized.toString());
 		}
-		unoptimized.optimizeLevel0();
-		System.out.println("Nach Level 0: " + unoptimized.toString());
 		System.out.println();
 	}
 }
