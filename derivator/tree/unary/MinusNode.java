@@ -7,6 +7,7 @@ public class MinusNode extends Node{
 
 	@Override
 	public String toString(){
+		if(parent == null) return "-" + leftChild.toString();
 		return "(-" + leftChild.toString() + ")";
 	}
 

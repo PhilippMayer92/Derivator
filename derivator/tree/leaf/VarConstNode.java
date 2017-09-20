@@ -1,6 +1,7 @@
 package derivator.tree.leaf;
 
 import derivator.tree.Node;
+import derivator.tree.unary.LnNode;
 
 public class VarConstNode extends Node{
 	private final String name;
@@ -16,6 +17,7 @@ public class VarConstNode extends Node{
 
 	@Override
 	public String toString(){
+		if(parent instanceof LnNode) return "(" + name + ")";
 		return name;
 	}
 

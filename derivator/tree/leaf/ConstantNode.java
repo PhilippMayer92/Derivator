@@ -1,6 +1,7 @@
 package derivator.tree.leaf;
 
 import derivator.tree.Node;
+import derivator.tree.unary.LnNode;
 
 public class ConstantNode extends Node{
 	private boolean isInt;
@@ -67,10 +68,15 @@ public class ConstantNode extends Node{
 
 	@Override
 	public String toString(){
+		String out;
+
 		if(isInt)
-			return Integer.toString(intValue);
+			out = Integer.toString(intValue);
 		else
-			return Double.toString(doubleValue);
+			out = Double.toString(doubleValue);
+
+		if(parent instanceof LnNode) return "(" + out + ")";
+		return out;
 	}
 
 	@Override
