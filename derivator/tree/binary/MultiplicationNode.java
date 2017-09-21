@@ -4,6 +4,7 @@ import derivator.tree.Node;
 import derivator.tree.unary.MinusNode;
 import derivator.tree.unary.PlusNode;
 import derivator.tree.leaf.ConstantNode;
+import derivator.util.ConstantFolder;
 
 public class MultiplicationNode extends Node{
 
@@ -64,6 +65,53 @@ public class MultiplicationNode extends Node{
 			}
 		}
 
+		return newTop;
+	}
+
+	@Override
+	public Node optimizeLevel2(){
+		Node newTop = this;
+		ConstantFolder cf = new ConstantFolder();
+		ConstantNode left, right;
+
+		this.setLeftChild(leftChild.optimizeLevel2());
+		this.setRightChild(rightChild.optimizeLevel2());
+
+		if(leftChild instanceof ConstantNode && rightChild instanceof ConstantNode){
+			left = (ConstantNode) leftChild;
+			right = (ConstantNode) rightChild;
+			newTop = cf.constantFoldingMult(left, right);
+		}else{
+			MinusNode minus;
+			Node leftWithSign = cf.findConstantMult(leftChild, true);
+			Node rightWithSign = cf.findConstantMult(rightChild, true);
+
+			if(rightWithSign != null && leftWithSign != null){
+				left = (ConstantNode) leftWithSign.getLeftChild();
+				right = (ConstantNode) rightWithSign.getLeftChild();
+				
+				newTop = new MultiplicationNode();
+				newTop.setRightChild(this);
+				
+				if(leftWithSign instanceof PlusNode){
+					if(rightWithSign instanceof PlusNode)
+						newTop.setLeftChild(cf.constantFoldingMult(left, right));
+					else{
+						newTop.setLeftChild(cf.constantFoldingDiv(left, right));
+					}
+				}else{
+					if(rightWithSign instanceof PlusNode){
+						newTop.setLeftChild(cf.constantFoldingDiv(right, left));
+					}else{
+						newTop = new DivisionNode();
+						newTop.setRightChild(cf.constantFoldingMult(left, right));
+						newTop.setLeftChild(this);	
+					}	
+				}
+				newTop = newTop.optimizeLevel0();
+				newTop = newTop.optimizeLevel1();
+			}
+		}
 		return newTop;
 	}
 

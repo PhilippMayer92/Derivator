@@ -247,8 +247,8 @@ public class ConstantFolder{
 			folded = new ConstantNode(Double.toString(prod));
 		}
 
-		if(leftConst != null) leftConst.setZero();
-		if(rightConst != null) rightConst.setZero();
+		if(leftConst != null) leftConst.setOne();
+		if(rightConst != null) rightConst.setOne();
 
 		return folded;
 	}
@@ -263,7 +263,7 @@ public class ConstantFolder{
 
 		div = left.getDoubleValue() / right.getDoubleValue();
 		div1 = (int) div;
-		
+
 		if((double) div1 == div){
 			div2 = Integer.toString(div1);
 		}else{
@@ -272,8 +272,8 @@ public class ConstantFolder{
 
 		folded = new ConstantNode(div2);
 
-		if(leftConst != null) leftConst.setZero();
-		if(rightConst != null) rightConst.setZero();
+		if(leftConst != null) leftConst.setOne();
+		if(rightConst != null) rightConst.setOne();
 
 		return folded;
 	}
@@ -313,7 +313,7 @@ public class ConstantFolder{
 			if(leftConst == null) leftConst = (ConstantNode) rightC;
 			else rightConst = (ConstantNode) rightC;
 
-			if(root instanceof DifferenceNode) mult = !mult;
+			if(root instanceof DivisionNode) mult = !mult;
 			if(mult)
 				top = new PlusNode();
 			else
