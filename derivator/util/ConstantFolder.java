@@ -237,6 +237,47 @@ public class ConstantFolder{
 		}
 	}
 
+	public Node constantFoldingMult(ConstantNode left, ConstantNode right){
+		Node folded;
+		if(left.isInt() && right.isInt()){
+			int prod = left.getIntValue() * right.getIntValue();
+			folded = new ConstantNode(Integer.toString(prod));
+		}else{
+			double prod = left.getDoubleValue() * right.getDoubleValue();
+			folded = new ConstantNode(Double.toString(prod));
+		}
+
+		if(leftConst != null) leftConst.setZero();
+		if(rightConst != null) rightConst.setZero();
+
+		return folded;
+	}
+
+	public Node constantFoldingDiv(ConstantNode left, ConstantNode right){
+		Node folded;
+		double div;
+		int div1;
+		String div2;
+
+		if(right.getDoubleValue() == 0) throw new ArithmeticException("Division by zero");
+
+		div = left.getDoubleValue() / right.getDoubleValue();
+		div1 = (int) div;
+		
+		if((double) div1 == div){
+			div2 = Integer.toString(div1);
+		}else{
+			div2 = Double.toString(div);
+		}
+
+		folded = new ConstantNode(div2);
+
+		if(leftConst != null) leftConst.setZero();
+		if(rightConst != null) rightConst.setZero();
+
+		return folded;
+	}
+
 	public Node findConstantMult(Node root, boolean mult){
 		Node rightC, leftC, top = null;
 
