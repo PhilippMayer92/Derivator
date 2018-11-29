@@ -22,7 +22,7 @@ public class Derivator{
 			throw new IllegalArgumentException("variable name has to be only one letter");
 		}
 		if(var == 'e'){
-			throw new IllegalArgumentException("variable name 'e' is reserved for the eulerian number");
+			throw new IllegalArgumentException("variable name 'e' is reserved for the Eulerian number");
 		}
 
 		numbDerivation = Integer.parseInt(args[2]);
